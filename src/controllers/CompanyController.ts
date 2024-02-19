@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { prisma } from '../database';
 import { BadRequestsException } from '../exceptions/bad-requests';
 import { ErroCode } from '../exceptions/root';
+import { prisma } from '../server';
 
 export default {
   
@@ -13,7 +13,6 @@ export default {
     
       if (companyExist) {
         next(new BadRequestsException('Empresa já cadastrada!', ErroCode.COMPANY_ALREADY_EXISTS)); 
-
       }
 
       const company = await prisma.empresa.create({
