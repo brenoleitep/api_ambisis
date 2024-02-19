@@ -1,18 +1,19 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { prisma } from '../database';
+import { BadRequestsException } from '../exceptions/bad-requests';
+import { ErroCode } from '../exceptions/root';
 
 export default {
   
-  async createCompany(request: Request, response: Response) {
+  async createCompany(request: Request, response: Response, next: NextFunction) {
 
     try {
       const {razao_social, cnpj, cep, cidade, estado, bairro, complemento} = request.body;
       const companyExist = await prisma.empresa.findUnique({ where: { cnpj } });
     
       if (companyExist) {
-        return response.status(400).json({
-          message: 'Erro: Empresa já cadastrada com este CNPJ.'
-        });
+        next(new BadRequestsException('Empresa já cadastrada!', ErroCode.COMPANY_ALREADY_EXISTS)); 
+
       }
 
       const company = await prisma.empresa.create({
@@ -28,8 +29,8 @@ export default {
         }
       });
 
-      return response.status(200).json({
-        message: 'Sucesso: Empresa criada com sucesso!',
+      return response.json({
+        message: 'Empresa criada com sucesso!',
         data: company
       });
     } catch (error) {
@@ -37,14 +38,12 @@ export default {
     }
   },
 
-  async listCompany(request: Request, response: Response) {
+  async listCompany(request: Request, response: Response, next: NextFunction) {
     try {
       const companies = await prisma.empresa.findMany();
 
       if (!companies || companies.length === 0) {
-        return response.status(400).json({
-          message: 'Erro: Não existem empresas cadastradas.'
-        });
+        next(new BadRequestsException('Empresa já cadastrada!', ErroCode.COMPANY_NOT_FOUND)); 
       }
     
       return response.json({
@@ -56,16 +55,14 @@ export default {
     }
   },
 
-  async updateCompany(request: Request, response: Response) {
+  async updateCompany(request: Request, response: Response, next: NextFunction) {
     try {
       const { id, razao_social, cnpj, cep, cidade, estado, bairro, complemento } = request.body;
 
       const companyExist = await prisma.empresa.findUnique({ where: { id: Number(id) } });
 
       if (!companyExist) {
-        return response.status(400).json({
-          message: 'Erro: Empresa não encontrada.'
-        });
+        next(new BadRequestsException('Empresa já cadastrada!', ErroCode.COMPANY_NOT_FOUND)); 
       }
 
       const updatedCompany = await prisma.empresa.update({
@@ -93,16 +90,14 @@ export default {
     }
   },
 
-  async deleteCompany(request: Request, response: Response) {
+  async deleteCompany(request: Request, response: Response, next: NextFunction) {
     try {
       const { id } = request.params;
 
       const companyExist = await prisma.empresa.findUnique({ where: { id: Number(id) } });
 
       if (!companyExist) {
-        return response.json({
-          message: 'Error: Empresa não encontrada!',
-        });
+        next(new BadRequestsException('Empresa não encontrada!', ErroCode.COMPANY_NOT_FOUND)); 
       }
 
       const company = await prisma.empresa.delete({
