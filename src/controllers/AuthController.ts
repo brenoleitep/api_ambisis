@@ -1,52 +1,54 @@
 import { compareSync, hashSync } from 'bcryptjs';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../secrets';
-import { BadRequestsException } from '../exceptions/bad-requests';
-import { ErroCode } from '../exceptions/root';
-import { UnprocessableEntity } from '../exceptions/validation';
+import { LoginSchema, SignUpSchema } from '../schema/users';
 import { prisma } from '../server';
 
 export default {
-  async signup (request: Request, response: Response, next: NextFunction) {
-    try {
-            
-      const {email, password, name} = request.body;
-      
-      let user = await prisma.user.findFirst({where: {email}});
-      
-      if (user) {
-        next(new BadRequestsException('Usuário já cadastrado!', ErroCode.USER_ALREADY_EXISTS)); 
-      }
+  async signup (request: Request, response: Response) {
+    SignUpSchema.parse(request.body);
 
-      user = await prisma.user.create({
-        data:{
-          name,
-          email,
-          password: hashSync(password, 10)
-        }
-      });
+    const {email, password, name} = request.body;
+      
+    let user = await prisma.user.findFirst({where: {email}});
+      
+    if (user) {
+      return response.status(400).json({
+        message: 'Usuário já cadastrado'
+      });  
+    }  
+
+    user = await prisma.user.create({
+      data:{
+        name,
+        email,
+        password: hashSync(password, 10)
+      }
+    });
     
-      response.json(user);
-    } catch (error) {
-      next(new UnprocessableEntity(error?.issue, 'Unprocessable entity', ErroCode.UNPROCESSABLE_ENTITY));
-    }
+    response.json(user);
+
   },
   
-  async login(request: Request, response: Response, next: NextFunction) {
+  async login(request: Request, response: Response) {
+    LoginSchema.parse(request.body);
+   
     const { email, password } = request.body;
 
     const user = await prisma.user.findFirst({ where: { email } });
 
     if (!user) {
-      next(new BadRequestsException('Usuário não existe!', ErroCode.USER_NOT_FOUND)); 
-    }
+      return response.status(400).json({
+        message: 'Usuário não existe'
+      });      }
 
     const passwordMatch = compareSync(password, user.password);
 
     if (!passwordMatch) {
-      next(new BadRequestsException('Senha ou usuários incorretos!', ErroCode.INCORRECT_PASSWORD)); 
-    }
+      return response.status(400).json({
+        message: 'Senha ou usuário incorretos'
+      });      }
 
     const token = jwt.sign({
       userId: user.id
