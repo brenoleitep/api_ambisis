@@ -1,75 +1,39 @@
 import { NextFunction, Request, Response } from 'express';
-import httpStatus from 'http-status-codes';
-import { BadRequestsException } from '../exceptions/bad-requests';
-import { ErroCode } from '../exceptions/root';
-import { prisma } from '../server';
+import * as licenseService from '../services/licenseService';
 
-
-export default {
-  async createLicense(request: Request, response: Response, next: NextFunction) {
-    const { empresaId, numero, orgao_ambiental, emissao, validade } = request.body;
-
-    const empresaExist = await prisma.empresa.findUnique({ where: { id: empresaId } });
-    if (!empresaExist) {
-      next(new BadRequestsException('Licenças ambientais não encontradas', ErroCode.LICENSE_NOT_FOUND));
-    }
-
-    const license = await prisma.licencaAmbiental.create({
-      data: {
-        numero,
-        orgao_ambiental,
-        emissao,
-        validade,
-        empresa: { connect: { id: empresaId } }
-      }
-    });
-
-    return response.status(httpStatus.CREATED).json({
-      data: license
-    });  
-  },
-
-  async listLicenses(request: Request, response: Response, next: NextFunction) {
-
-    const licenses = await prisma.licencaAmbiental.findMany();
-    if (!licenses || licenses.length === 0) {
-      next(new BadRequestsException('Licenças ambientais não encontradas', ErroCode.LICENSE_NOT_FOUND));
-    }
-    return response.status(httpStatus.OK).json({
-      data: licenses
-    });  
-  },
-
-  async updateLicense(request: Request, response: Response, next: NextFunction) {
-
-    const { id, numero, orgao_ambiental, emissao, validade } = request.body;
-
-    const licenseExist = await prisma.licencaAmbiental.findUnique({ where: { id: Number(id) } });
-    if (!licenseExist) {
-      next(new BadRequestsException('Licenças ambientais não encontradas', ErroCode.LICENSE_NOT_FOUND));
-    }
-
-    const updatedLicense = await prisma.licencaAmbiental.update({
-      where: { id: Number(id) },
-      data: { numero, orgao_ambiental, emissao, validade }
-    });
-
-    return response.status(httpStatus.OK).json({
-      data: updatedLicense
-    });  
-  },
-
-  async deleteLicense(request: Request, response: Response, next: NextFunction) {
-
-    const { id } = request.params;
-    const licenseExist = await prisma.licencaAmbiental.findUnique({ where: { id: Number(id) } });
-
-    if (!licenseExist) {
-      next(new BadRequestsException('Licenças ambientais não encontradas', ErroCode.LICENSE_NOT_FOUND));
-    }
-
-    await prisma.licencaAmbiental.delete({ where: { id: Number(id) } });
-
-    return response.json({ message: 'Licença ambiental deletada com sucesso!' });
+export async function createLicense(request: Request, response: Response, next: NextFunction) {
+  try {
+    const license = await licenseService.createLicense(request.body);
+    return response.status(201).json({ data: license });
+  } catch (error) {
+    next(error);
   }
-};
+}
+
+export async function listLicenses(request: Request, response: Response, next: NextFunction) {
+  try {
+    const licenses = await licenseService.listLicenses();
+    return response.status(200).json({ data: licenses });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateLicense(request: Request, response: Response, next: NextFunction) {
+  try {
+    const updatedLicense = await licenseService.updateLicense(request); 
+    return response.status(200).json({ data: updatedLicense });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteLicense(request: Request, response: Response, next: NextFunction) {
+  try {
+    const id = parseInt(request.params.id); 
+    await licenseService.deleteLicense(id); 
+    return response.status(200).json({ message: 'Licença ambiental deletada com sucesso!' });
+  } catch (error) {
+    next(error);
+  }
+}

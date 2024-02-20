@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import LicenseController from '../controllers/LicenseController';
+import { createLicense, deleteLicense, listLicenses, updateLicense } from '../controllers/LicenseController';
+import { errorHandler } from '../error-handler';
 
 const licenseRouter = Router();
 
-licenseRouter.post('/createLicense', LicenseController.createLicense);
-licenseRouter.get('/listLicense', LicenseController.listLicenses);
-licenseRouter.put('/updateLicense/:id', LicenseController.updateLicense);
-licenseRouter.delete('/deleteLicense/:id', LicenseController.deleteLicense);
+licenseRouter.post('/createLicense', errorHandler(createLicense));
+licenseRouter.get('/listLicense', errorHandler(listLicenses));
+licenseRouter.put('/updateLicense/:id', updateLicense);
+licenseRouter.delete('/deleteLicense/:id', errorHandler(deleteLicense));
 
 export default licenseRouter;

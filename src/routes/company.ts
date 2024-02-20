@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import CompanyController from '../controllers/CompanyController';
+import { createCompany, deleteCompany, listCompany, updateCompany } from '../controllers/CompanyController';
+import { errorHandler } from '../error-handler';
 
 const companyRoutes = Router();
 
-companyRoutes.post('/createCompany', CompanyController.createCompany);
-companyRoutes.get('/listCompany', CompanyController.listCompany);
-companyRoutes.put('/updateCompany/:id', CompanyController.updateCompany);
-companyRoutes.delete('/deleteCompany/:id', CompanyController.deleteCompany);
+companyRoutes.post('/createCompany', errorHandler(createCompany));
+companyRoutes.get('/listCompany', errorHandler(listCompany));
+companyRoutes.put('/updateCompany/:id', errorHandler(updateCompany));
+companyRoutes.delete('/deleteCompany/:id', errorHandler(deleteCompany));
 
 
 export default companyRoutes;
