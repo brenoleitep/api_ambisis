@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev ./src/server.ts",
+    "dev": "ts-node-dev dist/src/server.js",
     "prebuild": "rm -rf dist",
     "build": "npm run prebuild && tsc -p tsconfig.json",
-    "start": "node dist/server.ts"
+    "start": "node dist/src/server.js"
   },
   "keywords": [],
   "author": "",
