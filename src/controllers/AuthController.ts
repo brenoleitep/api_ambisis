@@ -1,11 +1,13 @@
 import { compareSync, hashSync } from 'bcryptjs';
 import { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../secrets';
 import { BadRequestsException } from '../exceptions/bad-requests';
 import { ErroCode } from '../exceptions/root';
 import { LoginSchema, SignUpSchema } from '../schema/users';
 import { prisma } from '../server';
+
 
 export default {
   async signup (request: Request, response: Response, next: NextFunction) {
@@ -27,8 +29,9 @@ export default {
       }
     });
     
-    response.json(user);
-
+    return response.status(httpStatus.CREATED).json({
+      data: user
+    });
   },
   
   async login(request: Request, response: Response, next: NextFunction) {
@@ -54,6 +57,8 @@ export default {
 
     console.log(user, token);
 
-    response.json({ user, token });
+    return response.status(httpStatus.CREATED).json({
+      user, token
+    });  
   }
 };

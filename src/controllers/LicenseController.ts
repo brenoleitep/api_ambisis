@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status-codes';
 import { BadRequestsException } from '../exceptions/bad-requests';
 import { ErroCode } from '../exceptions/root';
 import { prisma } from '../server';
+
 
 export default {
   async createLicense(request: Request, response: Response, next: NextFunction) {
@@ -22,7 +24,9 @@ export default {
       }
     });
 
-    return response.json({ message: 'Licença ambiental criada com sucesso!', data: license });
+    return response.status(httpStatus.CREATED).json({
+      data: license
+    });  
   },
 
   async listLicenses(request: Request, response: Response, next: NextFunction) {
@@ -31,7 +35,9 @@ export default {
     if (!licenses || licenses.length === 0) {
       next(new BadRequestsException('Licenças ambientais não encontradas', ErroCode.LICENSE_NOT_FOUND));
     }
-    return response.json({ licenses });
+    return response.status(httpStatus.OK).json({
+      data: licenses
+    });  
   },
 
   async updateLicense(request: Request, response: Response, next: NextFunction) {
@@ -48,8 +54,9 @@ export default {
       data: { numero, orgao_ambiental, emissao, validade }
     });
 
-    return response.json({ message: 'Licença ambiental atualizada com sucesso!', data: updatedLicense });
-
+    return response.status(httpStatus.OK).json({
+      data: updatedLicense
+    });  
   },
 
   async deleteLicense(request: Request, response: Response, next: NextFunction) {

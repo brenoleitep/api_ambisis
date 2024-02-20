@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status-codes';
 import { BadRequestsException } from '../exceptions/bad-requests';
 import { ErroCode } from '../exceptions/root';
 import { prisma } from '../server';
@@ -27,8 +28,7 @@ export default {
       }
     });
 
-    return response.json({
-      message: 'Empresa criada com sucesso!',
+    return response.status(httpStatus.CREATED).json({
       data: company
     });
   },
@@ -41,8 +41,8 @@ export default {
       next(new BadRequestsException('Empresas não listadas', ErroCode.COMPANY_NOT_FOUND));
     }
     
-    return response.json({
-      companies
+    return response.status(httpStatus.CREATED).json({
+      data: companies
     });
 
   },
@@ -72,9 +72,8 @@ export default {
       }
     });
 
-    return response.json({
-      message: 'Empresa atualizada com sucesso!',
-      updatedCompany
+    return response.status(httpStatus.OK).json({
+      data: updatedCompany
     });
 
   },
@@ -94,11 +93,9 @@ export default {
       },
     });
 
-    return response.json({
-      message: 'Empresa deletada com sucesso!',
-      company
+    return response.status(httpStatus.OK).json({
+      data: company
     });
-
   },
 };
 
