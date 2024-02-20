@@ -7,4 +7,6 @@ export const errorMiddleware = (error: HttpException, req: Request, res: Respons
     errorCode: error.errorCode,
     errors: error.errors
   });
+
+  next();
 }; 
