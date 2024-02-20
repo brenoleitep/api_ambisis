@@ -6,7 +6,7 @@ const licenseRouter = Router();
 
 licenseRouter.post('/createLicense', errorHandler(createLicense));
 licenseRouter.get('/listLicense', errorHandler(listLicenses));
-licenseRouter.put('/updateLicense/:id', updateLicense);
+licenseRouter.put('/updateLicense/:id', errorHandler(updateLicense));
 licenseRouter.delete('/deleteLicense/:id', errorHandler(deleteLicense));
 
 export default licenseRouter;
