@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import express, { Express, Request, Response } from 'express';
+import 'express-async-errors';
 import { PORT } from '../secrets';
 import { errorMiddleware } from './middleware/errors';
 import rootRouter from './routes';
@@ -17,6 +18,7 @@ app.get('/', (request: Request, response: Response) => {
 });
 
 app.use(errorMiddleware);
+
 
 app.listen(PORT, () => {
   console.log('Server is running');
