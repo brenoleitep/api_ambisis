@@ -47,7 +47,8 @@ export async function listCompany(request: Request, response: Response, next: Ne
 
 export async function updateCompany(request: Request, response: Response, next: NextFunction) {
   try {
-    const { id, razao_social, cnpj, cep, cidade, estado, bairro, complemento } = request.body;
+    const {razao_social, cnpj, cep, cidade, estado, bairro, complemento } = request.body;
+    const { id } = request.params;
 
     const companyExist = await prisma.empresa.findUnique({ where: { id: Number(id) } });
 
