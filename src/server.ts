@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import cors from 'cors';
 import express, { Express, Request, Response } from 'express';
 import 'express-async-errors';
 import { PORT } from '../secrets';
@@ -7,6 +8,7 @@ import rootRouter from './routes';
 
 const app:Express = express();
 
+app.use(cors());
 app.use(express.json());
 
 export const prisma = new PrismaClient();
