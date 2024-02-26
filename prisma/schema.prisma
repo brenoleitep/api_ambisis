@@ -32,11 +32,11 @@ model Empresa {
 }
 
 model LicencaAmbiental {
-  id              Int     @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   numero          String
   orgao_ambiental String
-  emissao         String
-  validade        String
-  empresa         Empresa @relation(fields: [empresaId], references: [id])
+  emissao         DateTime
+  validade        DateTime
+  empresa         Empresa  @relation(fields: [empresaId], references: [id])
   empresaId       Int
 }
