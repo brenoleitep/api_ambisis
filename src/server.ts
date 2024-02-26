@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import express, { Express, Request, Response } from 'express';
 import 'express-async-errors';
+import { errorMiddleware } from 'middleware/errors';
 import { PORT } from '../secrets';
 import rootRouter from './routes';
 
@@ -18,7 +19,7 @@ app.get('/', (request: Request, response: Response) => {
   return response.send({ message: 'Hello Brene' });
 });
 
-// app.use(errorMiddleware);
+app.use(errorMiddleware);
 
 
 app.listen(PORT, () => {

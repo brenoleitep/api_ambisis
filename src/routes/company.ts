@@ -7,7 +7,7 @@ const companyRoutes = Router();
 companyRoutes.post('/createCompany', errorHandler(createCompany));
 companyRoutes.get('/listCompany', errorHandler(listCompany));
 companyRoutes.put('/updateCompany/:id', errorHandler(updateCompany));
-companyRoutes.delete('/deleteCompany/:id', deleteCompany);
+companyRoutes.delete('/deleteCompany/:id', errorHandler(deleteCompany));
 
 
 export default companyRoutes;
