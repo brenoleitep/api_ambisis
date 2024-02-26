@@ -3,7 +3,6 @@ import cors from 'cors';
 import express, { Express, Request, Response } from 'express';
 import 'express-async-errors';
 import { PORT } from '../secrets';
-import { errorMiddleware } from './middleware/errors';
 import rootRouter from './routes';
 
 const app:Express = express();
@@ -19,7 +18,7 @@ app.get('/', (request: Request, response: Response) => {
   return response.send({ message: 'Hello Brene' });
 });
 
-app.use(errorMiddleware);
+// app.use(errorMiddleware);
 
 
 app.listen(PORT, () => {
