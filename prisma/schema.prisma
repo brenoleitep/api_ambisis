@@ -27,6 +27,7 @@ model Empresa {
   estado       String?
   bairro       String?
   complemento  String?
+  imageLink    String?
 
   licencas LicencaAmbiental[]
 }
