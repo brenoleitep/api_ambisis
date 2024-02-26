@@ -77,6 +77,8 @@ export async function deleteCompany(request: Request, response: Response, next: 
       throw new BadRequestsException('Empresa não encontrada', ErroCode.COMPANY_NOT_FOUND);
     }
 
+    await prisma.licencaAmbiental.deleteMany({ where: { empresaId: Number(id) } });
+
     const company = await prisma.empresa.delete({ where: { id: Number(id) } });
 
     return response.status(httpStatus.OK).json({ data: company });
