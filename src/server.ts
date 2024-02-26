@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import express, { Express, Request, Response } from 'express';
 import 'express-async-errors';
-import { errorMiddleware } from 'middleware/errors';
 import { PORT } from '../secrets';
+import { errorMiddleware } from '../src/middleware/errors';
 import rootRouter from './routes';
 
 const app:Express = express();
