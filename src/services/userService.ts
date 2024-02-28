@@ -28,15 +28,15 @@ export async function signup(email: string, password: string, name: string) {
 
 export async function login(email: string, password: string) {
   LoginSchema.parse({ email, password });
-
   const user = await prisma.user.findFirst({ where: { email } });
-  if (!user) {
-    throw new BadRequestsException('Usuário não encontrado', ErroCode.USER_NOT_FOUND);
+  const passwordMatch = compareSync(password, user.password);
+
+  if (!passwordMatch) {
+    throw new BadRequestsException('Usuário ou senha incorretos');
   }
 
-  const passwordMatch = compareSync(password, user.password);
-  if (!passwordMatch) {
-    throw new BadRequestsException('Usuário ou senha incorretos', ErroCode.INVALID_CREDENTIALS);
+  if (!user) {
+    throw new BadRequestsException('Usuário ou senha incorretos');
   }
 
   const token = jwt.sign({ userId: user.id }, JWT_SECRET);

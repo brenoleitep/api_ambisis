@@ -3,7 +3,6 @@ import verifyToken from '../middleware/verifyToken';
 import authRoutes from './auth';
 import companyRoutes from './company';
 import licenseRouter from './licenses';
-
 const rootRouter: Router = Router();
 
 rootRouter.use('/auth', authRoutes);
