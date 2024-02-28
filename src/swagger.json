@@ -1,0 +1,647 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API projeto Ambisis",
+    "description": "Essa API tem como objetivo servir como um CRUD de teste para uma vaga como desenvolvedor fullstack para a Ambisis. O objetivo dela é ser um CRUD completo que gerencie empresas e suas licenças.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3030/",
+      "description": "API de teste"
+    },
+    {
+      "url": "https://api-ambisis.onrender.com/",
+      "description": "API de Produção"
+    }
+  ],
+  "paths": {
+    "/auth/cadastro": {
+      "post": {
+        "summary": "Cadastro de novo usuário",
+        "description": "Endpoint responsável por cadastrar um novo usuário.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login de usuário",
+        "description": "Endpoint responsável por autenticar um usuário existente.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário ou senha incorretos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company/createCompany": {
+      "post": {
+        "summary": "Criação de uma nova empresa",
+        "description": "Endpoint para criar uma nova empresa.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "razao_social": {
+                    "type": "string",
+                    "example": "Nova Empresa Ltda"
+                  },
+                  "cnpj": {
+                    "type": "string",
+                    "example": "12345678901234"
+                  },
+                  "cep": {
+                    "type": "string",
+                    "example": "12345-678"
+                  },
+                  "cidade": {
+                    "type": "string",
+                    "example": "Cidade"
+                  },
+                  "estado": {
+                    "type": "string",
+                    "example": "Estado"
+                  },
+                  "bairro": {
+                    "type": "string",
+                    "example": "Bairro"
+                  },
+                  "complemento": {
+                    "type": "string",
+                    "example": "Complemento"
+                  }
+                },
+                "required": ["razao_social", "cnpj", "cep", "cidade", "estado"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Empresa criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "razao_social": {
+                          "type": "string",
+                          "example": "Nova Empresa Ltda"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao criar empresa"
+          }
+        }
+      }
+    },
+    "/company/listCompany": {
+      "get": {
+        "summary": "Listagem de empresas",
+        "description": "Endpoint para listar todas as empresas.",
+        "responses": {
+          "200": {
+            "description": "Lista de empresas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "razao_social": {
+                            "type": "string",
+                            "example": "Nova Empresa Ltda"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhuma empresa encontrada"
+          }
+        }
+      }
+    },
+    "/company/updateCompany/{id}": {
+      "put": {
+        "summary": "Atualização de empresa",
+        "description": "Endpoint para atualizar os detalhes de uma empresa existente.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID da empresa a ser atualizada"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "razao_social": {
+                    "type": "string",
+                    "example": "Nova Razão Social Ltda"
+                  },
+                  "cep": {
+                    "type": "string",
+                    "example": "54321-876"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Empresa atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "razao_social": {
+                          "type": "string",
+                          "example": "Nova Razão Social Ltda"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Empresa não encontrada"
+          }
+        }
+      }
+    },
+    "/company/deleteCompany/{id}": {
+      "delete": {
+        "summary": "Exclusão de empresa",
+        "description": "Endpoint para excluir uma empresa existente.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID da empresa a ser excluída"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empresa excluída com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Empresa deletada com sucesso"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Empresa não encontrada"
+          }
+        }
+      },
+
+      "/license/createLicense": {
+        "post": {
+          "summary": "Criação de licença ambiental",
+          "description": "Endpoint para criar uma nova licença ambiental.",
+          "parameters": [],
+          "requestBody": {
+            "description": "Dados da nova licença ambiental",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "empresaId": {
+                      "type": "integer",
+                      "description": "ID da empresa associada à licença"
+                    },
+                    "numero": {
+                      "type": "string",
+                      "description": "Número da licença"
+                    },
+                    "orgao_ambiental": {
+                      "type": "string",
+                      "description": "Órgão ambiental responsável pela emissão da licença"
+                    },
+                    "emissao": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Data de emissão da licença"
+                    },
+                    "validade": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Data de validade da licença"
+                    }
+                  },
+                  "required": [
+                    "empresaId",
+                    "numero",
+                    "orgao_ambiental",
+                    "emissao",
+                    "validade"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Licença ambiental criada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "ID da licença criada"
+                          },
+                          "numero": {
+                            "type": "string",
+                            "description": "Número da licença criada"
+                          },
+                          "orgao_ambiental": {
+                            "type": "string",
+                            "description": "Órgão ambiental responsável pela licença criada"
+                          },
+                          "emissao": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Data de emissão da licença criada"
+                          },
+                          "validade": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Data de validade da licença criada"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "numero",
+                          "orgao_ambiental",
+                          "emissao",
+                          "validade"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/license/listLicense": {
+        "get": {
+          "summary": "Listagem de licenças ambientais",
+          "description": "Endpoint para listar todas as licenças ambientais.",
+          "responses": {
+            "200": {
+              "description": "Lista de licenças ambientais",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID da licença"
+                        },
+                        "numero": {
+                          "type": "string",
+                          "description": "Número da licença"
+                        },
+                        "orgao_ambiental": {
+                          "type": "string",
+                          "description": "Órgão ambiental responsável pela emissão da licença"
+                        },
+                        "emissao": {
+                          "type": "string",
+                          "format": "date",
+                          "description": "Data de emissão da licença"
+                        },
+                        "validade": {
+                          "type": "string",
+                          "format": "date",
+                          "description": "Data de validade da licença"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "numero",
+                        "orgao_ambiental",
+                        "emissao",
+                        "validade"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Nenhuma licença encontrada"
+            }
+          }
+        }
+      },
+      "/license/updateLicense/{id}": {
+        "put": {
+          "summary": "Atualização de licença ambiental",
+          "description": "Endpoint para atualizar uma licença ambiental existente.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 1
+              },
+              "description": "ID da licença a ser atualizada"
+            }
+          ],
+          "requestBody": {
+            "description": "Dados atualizados da licença ambiental",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "numero": {
+                      "type": "string",
+                      "description": "Novo número da licença"
+                    },
+                    "orgao_ambiental": {
+                      "type": "string",
+                      "description": "Novo órgão ambiental responsável pela licença"
+                    },
+                    "validade": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Nova data de validade da licença"
+                    }
+                  },
+                  "required": ["numero", "orgao_ambiental", "validade"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Licença ambiental atualizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "ID da licença atualizada"
+                          },
+                          "numero": {
+                            "type": "string",
+                            "description": "Novo número da licença"
+                          },
+                          "orgao_ambiental": {
+                            "type": "string",
+                            "description": "Novo órgão ambiental responsável pela licença"
+                          },
+                          "validade": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Nova data de validade da licença"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "numero",
+                          "orgao_ambiental",
+                          "validade"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Licença não encontrada"
+            }
+          }
+        }
+      },
+      "/license/deleteLicense/{id}": {
+        "delete": {
+          "summary": "Exclusão de licença ambiental",
+          "description": "Endpoint para excluir uma licença ambiental existente.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 1
+              },
+              "description": "ID da licença a ser excluída"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Licença ambiental excluída com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Licença deletada com sucesso"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Licença não encontrada"
+            }
+          }
+        }
+      }
+    }
+  }
+}
