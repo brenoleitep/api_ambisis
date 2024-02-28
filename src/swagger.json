@@ -16,7 +16,7 @@
     }
   ],
   "paths": {
-    "/api/auth/cadastro": {
+    "api/auth/cadastro": {
       "post": {
         "summary": "Cadastro de novo usuário",
         "description": "Endpoint responsável por cadastrar um novo usuário.",
@@ -81,7 +81,7 @@
         }
       }
     },
-    "/api/auth/login": {
+    "api/auth/login": {
       "post": {
         "summary": "Login de usuário",
         "description": "Endpoint responsável por autenticar um usuário existente.",
@@ -140,7 +140,7 @@
         }
       }
     },
-    "/api/company/createCompany": {
+    "api/company/createCompany": {
       "post": {
         "summary": "Criação de uma nova empresa",
         "description": "Endpoint para criar uma nova empresa.",
@@ -216,7 +216,7 @@
         }
       }
     },
-    "/api/company/listCompany": {
+    "api/company/listCompany": {
       "get": {
         "summary": "Listagem de empresas",
         "description": "Endpoint para listar todas as empresas.",
@@ -255,7 +255,7 @@
         }
       }
     },
-    "/api/company/updateCompany/{id}": {
+    "api/company/updateCompany/{id}": {
       "put": {
         "summary": "Atualização de empresa",
         "description": "Endpoint para atualizar os detalhes de uma empresa existente.",
@@ -322,7 +322,7 @@
         }
       }
     },
-    "/api/company/deleteCompany/{id}": {
+    "api/company/deleteCompany/{id}": {
       "delete": {
         "summary": "Exclusão de empresa",
         "description": "Endpoint para excluir uma empresa existente.",
@@ -361,7 +361,7 @@
         }
       }
     },
-    "/api/license/createLicense": {
+    "api/license/createLicense": {
       "post": {
         "summary": "Criação de licença ambiental",
         "description": "Endpoint para criar uma nova licença ambiental.",
@@ -458,7 +458,7 @@
         }
       }
     },
-    "/api/license/listLicense": {
+    "api/license/listLicense": {
       "get": {
         "summary": "Listagem de licenças ambientais",
         "description": "Endpoint para listar todas as licenças ambientais.",
@@ -513,7 +513,7 @@
         }
       }
     },
-    "/api/license/updateLicense/{id}": {
+    "api/license/updateLicense/{id}": {
       "put": {
         "summary": "Atualização de licença ambiental",
         "description": "Endpoint para atualizar uma licença ambiental existente.",
@@ -603,7 +603,7 @@
         }
       }
     },
-    "/api/license/deleteLicense/{id}": {
+    "api/license/deleteLicense/{id}": {
       "delete": {
         "summary": "Exclusão de licença ambiental",
         "description": "Endpoint para excluir uma licença ambiental existente.",
